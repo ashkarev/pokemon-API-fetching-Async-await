@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pickachu</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <style>
+        html{
+            scroll-behavior: smooth;
+        }
+      .forCard {
+        height: 350px;
+        width: 300px;
+        border: 1px solid rgb(226, 214, 214);
+        border-radius: 15px;
+        box-shadow: 1px 1px 5px 1px rgb(208, 203, 56);
+        transition: transform 1s ease;
+      }
+      .forCard:hover {
+        transform: scale(1.1);
+      }
+      .forCenter {
+        min-height: 100vh;
+        margin-top: 100px;
+      }
+
+      .poke-img {
+        border-radius: 15px;
+      }
+      li {
+        list-style: none;
+        font-size: 18px;
+        color: #093fb4;
+      }
+      .row {
+        align-items: center;
+      }
+      span {
+        color: #e62727;
+      }
+      .circleImage {
+        height: 60px;
+      }
+      .img-pok {
+        height: 300px;
+        margin-top: -50px;
+      }
+      nav {
+        /* background: #fff6b3; */
+        box-shadow: 0 2px 30px rgba(199, 180, 7, 0.904);
+        letter-spacing: 1px;
+        transition: 0.3s ease;
+      }
+      .foundpok{
+        margin-bottom: 500px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="text-center py-3">
+      <h3 class="fw-bold m-0">
+        ⚡ <span style="color: #e6b800">Pika</span
+        ><span style="color: #e62727">chu</span>
+      </h3>
+      <form
+        class="d-flex justify-content-end align-items-center container"
+        role="search"
+      >
+        <input
+          class="form-control me-2 w-25 text-dark"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+          id="searchKey"
+        />
+        <button onclick="forbuttonClick(event)" class="btn btn-outline-warning text-dark" type="submit">Search</button>
+      </form>
+    </nav>
+
+    <div style="height: 100px" class="head-image d-flex justify-content-center">
+      <img class="img-pok" src="./assets/pokkk.png" alt="" />
+    </div>
+    <div class="forCenter container d-flex">
+      <div class="row gap-5 justify-content-center" id="result"></div>
+    </div>
+    
+  </body>
+  <script>
+
+    let apiResponce=[]
+    const forApi = async (event) => {
+       apiResponce = await fetch("https://api.jsonbin.net/54saa9w6pjib0y1h");
+      apiResponce = await apiResponce.json();
+      console.log(apiResponce);
+      apiResponce.map(
+        (data) =>
+          (result.innerHTML += `  <div class="col-lg-4 col-md-6 mb-5 forCard "><img class="  poke-img ms-5 img-fluid h-50 "  src="${data.image}" alt=""> <ul class="position-relative">
+                <li>Name : <span>${data.name}</span> </li>
+                <li>Abilities of <span>${data.name}</span> </li>
+                <li><span>${data.abilities[0]}</span> </li>
+                <li><span>${data.abilities[1]}</span> </li>
+    <img class="circleImage img-fluid  position-absolute bottom-0 end-0" " src="./assets/circle.png" alt="">
+
+     
+          
+            </ul>
+            </div>`)
+      );
+     
+    };
+     const forbuttonClick = (event) => {
+         event.preventDefault(); //for not refresh
+        let filteredPok=document.getElementById('searchKey').value.toLowerCase()
+
+       found= apiResponce.find((eachData)=>
+        eachData.name===filteredPok
+       )
+       if(found){
+       result.innerHTML=` <div  class= "foundpok col-lg-4 col-md-6  forCard" >
+            <img class="poke-img ms-5 img-fluid h-50" src="${found.image}" alt="">
+            <ul class="position-relative">
+              <li>Name : <span>${found.name}</span></li>
+              <li>Abilities of <span>${found.name}</span></li>
+              <li><span>${found.abilities[0]}</span></li>
+              <li><span>${found.abilities[1]}</span></li>
+              <img class="circleImage img-fluid position-absolute bottom-0 end-0" src="./assets/circle.png" alt="">
+      <button onclick="showAll()" class="btn btn-warning mt-2">view back</button>
+
+            </ul>
+          </div>`
+        
+       }else{
+        alert("❌ Pokémon not found!")
+       }
+         
+
+      };
+      const showAll = () => {
+  result.innerHTML = ""; // clear current result
+  apiResponce.map((data) => {
+    result.innerHTML += `
+      <div class="col-lg-4 col-md-6 mb-5 forCard">
+        <img class="poke-img ms-5 img-fluid h-50" src="${data.image}" alt="">
+        <ul class="position-relative">
+          <li>Name : <span>${data.name}</span></li>
+          <li>Abilities of <span>${data.name}</span></li>
+          <li><span>${data.abilities[0]}</span></li>
+          <li><span>${data.abilities[1]}</span></li>
+          <img class="circleImage img-fluid position-absolute bottom-0 end-0" src="./assets/circle.png" alt="">
+        </ul>
+      </div>
+    `;
+  });
+};
+
+    forApi();
+  </script>
+</html>
